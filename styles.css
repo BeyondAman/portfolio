@@ -1,0 +1,646 @@
+/* Terminal Color Variables */
+:root {
+    --terminal-bg: #000000bd;
+    --terminal-surface: #000000bd;
+    --terminal-green: #ffffff;
+    --terminal-cyan: #00cccc;
+    --terminal-white: #ffffff;
+    --terminal-gray: #ffffff;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Fira Code', monospace;
+    background-color: var(--terminal-bg);
+    color: var(--terminal-white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--terminal-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--terminal-green);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--terminal-cyan);
+}
+
+/* Navigation */
+.terminal-nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--terminal-green);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.terminal-nav.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 255, 65, 0.2);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+}
+
+.nav-logo {
+    color: var(--terminal-green);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 24px;
+}
+
+.nav-link {
+    background: none;
+    border: none;
+    color: var(--terminal-gray);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--terminal-green);
+}
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+}
+
+/* Hero Section */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px 20px;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.ascii-title {
+    color: var(--terminal-green);
+    margin-bottom: 32px;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.ascii-title pre {
+    font-size: clamp(0.5rem, 2vw, 1.2rem);
+    line-height: 1.2;
+}
+
+.role-animation {
+    margin-bottom: 32px;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.prompt {
+    color: var(--terminal-cyan);
+}
+
+.typewriter {
+    color: var(--terminal-white);
+}
+
+.cursor {
+    color: var(--terminal-green);
+    animation: blink 1s infinite;
+}
+
+.mission-card {
+    background-color: var(--terminal-surface);
+    border: 2px solid var(--terminal-green);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    padding: 24px;
+    margin-bottom: 32px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s ease;
+}
+
+.mission-card:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+}
+
+.mission-card p {
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    line-height: 1.7;
+}
+
+.comment {
+    color: var(--terminal-green);
+}
+
+.cta-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+@media (min-width: 640px) {
+    .cta-buttons {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+/* Terminal Buttons */
+.terminal-button {
+    background-color: var(--terminal-surface);
+    border: 2px solid var(--terminal-green);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    color: var(--terminal-green);
+    padding: 16px 32px;
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.terminal-button:hover {
+    background-color: var(--terminal-green);
+    color: var(--terminal-bg);
+}
+
+.terminal-button.secondary {
+    border-color: var(--terminal-cyan);
+    box-shadow: 0 0 10px rgba(0, 204, 204, 0.3);
+    color: var(--terminal-cyan);
+}
+
+.terminal-button.secondary:hover {
+    background-color: var(--terminal-cyan);
+    color: var(--terminal-bg);
+}
+
+/* Section Containers */
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 64px;
+}
+
+.section-title {
+    color: var(--terminal-green);
+    font-size: clamp(0.875rem, 2vw, 1.25rem);
+    margin-bottom: 16px;
+}
+
+.section-title.cyan {
+    color: var(--terminal-cyan);
+}
+
+/* Achievements Section */
+.achievements-section {
+    padding: 80px 0;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+}
+
+@media (min-width: 768px) {
+    .achievements-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.achievement-card {
+    background-color: var(--terminal-surface);
+    border: 2px solid var(--terminal-green);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    padding: 32px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.achievement-card:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+}
+
+.metric {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.metric.green {
+    color: var(--terminal-green);
+}
+
+.metric.cyan {
+    color: var(--terminal-cyan);
+}
+
+.metric-title {
+    color: var(--terminal-gray);
+    font-size: 0.875rem;
+    margin-bottom: 8px;
+}
+
+.achievement-card p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+/* Experience Section */
+.experience-section {
+    padding: 80px 0;
+    background-color: var(--terminal-surface);
+}
+
+.experience-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.experience-card {
+    background-color: var(--terminal-bg);
+    border: 2px solid var(--terminal-green);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    padding: 32px;
+    transition: all 0.3s ease;
+}
+
+.experience-card:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+}
+
+.experience-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+@media (min-width: 1024px) {
+    .experience-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+}
+
+.experience-info h3 {
+    color: var(--terminal-green);
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.company {
+    color: var(--terminal-cyan);
+    margin-bottom: 8px;
+}
+
+.experience-dates {
+    background-color: var(--terminal-surface);
+    color: var(--terminal-gray);
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.experience-highlights {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+@media (min-width: 768px) {
+    .experience-highlights {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.highlights-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.highlight {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.bullet {
+    color: var(--terminal-green);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.bullet.cyan {
+    color: var(--terminal-cyan);
+}
+
+.highlight p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+/* Skills Section */
+.skills-section {
+    padding: 80px 0;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+}
+
+@media (min-width: 768px) {
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .skills-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.skill-card {
+    background-color: var(--terminal-surface);
+    border: 2px solid var(--terminal-green);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.skill-card:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+}
+
+.skill-card h4 {
+    font-size: 1.125rem;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.skill-card h4.green {
+    color: var(--terminal-green);
+}
+
+.skill-card h4.cyan {
+    color: var(--terminal-cyan);
+}
+
+.skills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skill-item {
+    font-size: 0.875rem;
+}
+
+/* About Section */
+.about-section {
+    padding: 80px 0;
+    background-color: var(--terminal-surface);
+}
+
+.about-card {
+    background-color: var(--terminal-bg);
+    border: 2px solid var(--terminal-green);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    padding: 32px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.about-subtext {
+    font-size: 0.875rem;
+    color: var(--terminal-gray);
+}
+
+/* Contact Section */
+.contact-section {
+    padding: 80px 0;
+}
+
+.contact-card {
+    background-color: var(--terminal-surface);
+    border: 2px solid var(--terminal-green);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    padding: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-intro {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.contact-intro p {
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+    .contact-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.contact-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+}
+
+.contact-label {
+    color: var(--terminal-green);
+    margin-right: 16px;
+    width: 120px;
+    font-size: 0.875rem;
+}
+
+.contact-link {
+    color: var(--terminal-cyan);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-link:hover {
+    color: var(--terminal-white);
+}
+
+.contact-info {
+    color: var(--terminal-white);
+}
+
+.contact-cta {
+    text-align: center;
+}
+
+/* Footer */
+.footer {
+    padding: 32px 20px;
+    border-top: 2px solid var(--terminal-green);
+}
+
+.footer-content {
+    text-align: center;
+    color: var(--terminal-gray);
+    font-size: 0.75rem;
+}
+
+/* Animations */
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 0 5px var(--terminal-green), 0 0 10px var(--terminal-green), 0 0 15px var(--terminal-green); }
+    100% { text-shadow: 0 0 10px var(--terminal-green), 0 0 20px var(--terminal-green), 0 0 30px var(--terminal-green); }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Utility Classes */
+.green { color: var(--terminal-green); }
+.cyan { color: var(--terminal-cyan); }
+.white { color: var(--terminal-white); }
+.gray { color: var(--terminal-gray); }
+
+/* Responsive Text Scaling */
+@media (max-width: 480px) {
+    .ascii-title pre {
+        font-size: 0.4rem;
+    }
+    
+    .role-animation {
+        font-size: 1.25rem;
+    }
+    
+    .metric {
+        font-size: 3rem;
+    }
+}
+
+.terminal-nav,
+.terminal-nav ul,
+main {
+    background: rgba(0, 0, 0, 0.3); /* semi-transparent overlay for readability */
+    backdrop-filter: blur(2px); /* optional: soft blur for better contrast */
+}
+
+/* Video styles */
+#bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Keep video behind everything */
+}
+
+/* Make sure all content is above video */
+* {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    z-index: 1; /* sits above video but below your text */
+}
+
+main, header, footer {
+    position: relative;
+    z-index: 2; /* keep your content above the overlay */
+}
