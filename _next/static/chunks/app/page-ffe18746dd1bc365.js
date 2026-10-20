@@ -446,8 +446,15 @@
                 }),
                 (0, r.jsx)("p", {
                   className:
-                    "font-mono text-xs text-green-200/70 line-clamp-2 sm:line-clamp-none group-hover:text-green-200/90 transition-colors duration-300",
-                  children: a,
+                    "font-mono text-xs leading-relaxed text-green-200/70 group-hover:text-green-200/90 transition-colors duration-300",
+                  children: Array.isArray(a)
+                    ? (0, r.jsx)("ul", {
+                        className: "list-disc space-y-1 pl-4",
+                        children: a.map((e, t) =>
+                          (0, r.jsx)("li", { children: e }, t)
+                        ),
+                      })
+                    : a,
                 }),
               ],
             }),
@@ -873,26 +880,57 @@
       };
       let z = [
           {
-            title: "DevOps & Solution Architect",
-            company: "Redacted (Freelance)",
+            title: "Sr. DevOps Engineer",
+            company: "orbitronai.com",
+            role: "Full-time",
+            period: "Oct 2025 - Present",
+            location: "Bengaluru, Karnataka, India · On-site",
+            description:
+              "Building production infrastructure and release foundations for an agentic AI platform.",
+            className:
+              "from-cyan-900/20 to-cyan-950/20 border-cyan-900/50",
+            details: [
+              "Architected infrastructure for an agentic AI platform across local development, serverless workloads, and scalable Kubernetes, supporting independently deployable products and production-ready foundations.",
+              "Scaled a black-box browser application from 2 to 500+ concurrent sessions with AdsPower-based automation for end-to-end workflows.",
+              "Established multi-region release engineering, including branching strategies, versioning, release processes, and rollout strategies.",
+              "Built internal agentic workflows to standardize AI-assisted development, prompts, testing, and output validation.",
+              "Implemented Metabase business intelligence and analytics with data integration and access controls.",
+              "Led reliability and security work across 7 environments, 63 components, and 11,935 configuration and infrastructure items; identified 195 unreferenced resources and validated consistency across 22 of 22 environment renders.",
+              "As part of a 2-person DevOps team in a 20+ developer organization, identified 35+ release reliability issues across 7 categories and analyzed 31 failed release candidate builds while driving CI/CD, Kubernetes security, least-privilege access, and GDPR/SOC 2 readiness.",
+            ],
+            technologies: [
+              "Kubernetes",
+              "Serverless",
+              "Agentic AI",
+              "AdsPower",
+              "Metabase",
+              "CI/CD",
+              "Release Engineering",
+              "Security",
+            ],
+            url: "#",
+          },
+          {
+            title: "Sr. DevOps & Solution Architect",
+            company: "Stealth Startup",
             role: "Freelance",
-            period: "Jan 2025 - Jun 2025",
+            period: "Jan 2025 - Sep 2025",
             description:
               "Orchestrating and scaling cloud-native systems for Web3 infrastructure.",
             className: "from-blue-900/20 to-blue-950/20 border-blue-900/50",
             details:
-              "Managed and optimized multi-cloud infrastructure across AWS and Hetzner, achieving 99.95% uptime. Spearheaded zero-downtime migrations for over 100 instances and orchestrated zero-downtime upgrades of 100+ blockchain nodes. Improved system reliability from 99% to 99.9% by redesigning the monitoring and alerting stack, cutting incident response time by 30%. Deployed and managed high-availability blockchain networks like Karak, Sui, Sei, and Ronin.",
+              "Maintained and optimized 100+ instances with Ansible for high availability and performance. Redesigned the monitoring and alerting stack for higher availability and reliability, and replaced outdated logging and monitoring components with scalable observability solutions. Migrated all instances to new services with monitoring compatibility. Deployed and managed Karak, Wormhole, Sui, Sei, Ronin, and Mezo blockchain networks. Built infrastructure and service dashboards for real-time visibility.",
             technologies: [
-              "AWS",
-              "Hetzner",
-              "Terraform",
-              "Grafana",
-              "Prometheus",
-              "Vault",
+              "Ansible",
+              "Alloy",
+              "Monitoring",
+              "Observability",
               "Karak",
+              "Wormhole",
               "Sui",
               "Sei",
               "Ronin",
+              "Mezo",
             ],
             url: "#",
           },
@@ -906,7 +944,7 @@
             className:
               "from-purple-900/20 to-purple-950/20 border-purple-900/50",
             details:
-              "Executed a high-risk, zero-downtime service mesh upgrade from Istio 1.8 to 1.17 and upgraded Kubernetes clusters on GKE. Migrated legacy CI/CD pipelines to ArgoCD and GitHub Actions, reducing deployment time from 40 to 5 minutes. Engineered multi-regional Kubernetes clusters, achieving 99.95% production uptime. Implemented a robust observability stack using Prometheus, Grafana, and Loki. Automated the deployment of complex cloud infrastructure with Terraform.",
+              "Led migration of legacy CI/CD pipelines to resilient ArgoCD and GitHub Actions workflows, documenting 40+ cloud applications and reducing deployment time from 40 minutes to 5 minutes. Established centralized monitoring for 10+ clusters and 40+ services, reducing costs and unifying dashboards with dynamic alerts. Deployed Ethereum, Polygon, Optimism, Arbitrum, and Base nodes with Slack release alerts. Introduced Go profiling and a Kubernetes sidecar to automate profile extraction and remote storage. Automated onboarding across Google Workspace, GitHub teams, GCP projects, and repositories. Introduced OpenTelemetry practices and developer training. Migrated services between cloud platforms with minimal downtime. Improved security with VPNs, a self-managed Helm chart museum, RBAC, and Kubernetes network policies. Implemented database operators and coached teams on adoption.",
             technologies: [
               "GKE",
               "ArgoCD",
@@ -1125,13 +1163,14 @@
                   n &&
                   (0, r.jsxs)("div", {
                     className:
-                      "fixed inset-0 flex items-center justify-center bg-black/90 z-50 overflow-y-auto",
+                      "fixed inset-0 bg-black/90 z-50 overflow-y-auto",
                     children: [
                       (0, r.jsx)(w.E.div, {
                         initial: { opacity: 0 },
                         animate: { opacity: 1 },
                         exit: { opacity: 0 },
-                        className: "absolute inset-0 pointer-events-none crt",
+                        className:
+                          "fixed inset-0 h-screen w-screen pointer-events-none crt z-0",
                         style: {
                           backgroundImage:
                             "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(59,130,246,0.1) 2px, rgba(59,130,246,0.1) 4px)",
@@ -1139,7 +1178,7 @@
                       }),
                       (0, r.jsxs)(w.E.div, {
                         className:
-                          "z-10 w-full max-w-5xl py-8 sm:py-12 px-2 sm:px-4 relative",
+                          "z-10 mx-auto w-full max-w-5xl py-8 sm:py-12 px-2 sm:px-4 relative",
                         variants: p,
                         initial: "hidden",
                         animate: "visible",
@@ -1214,7 +1253,12 @@
                                                 .concat(e.company),
                                               description: ""
                                                 .concat(e.role, " • ")
-                                                .concat(e.period),
+                                                .concat(e.period)
+                                                .concat(
+                                                  e.location
+                                                    ? " • ".concat(e.location)
+                                                    : ""
+                                                ),
                                               details: e.details,
                                               url: e.url || "#",
                                               className: e.className,
