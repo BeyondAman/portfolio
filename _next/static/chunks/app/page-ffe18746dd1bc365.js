@@ -635,7 +635,7 @@
             z = (0, a.useCallback)(() => {
               let e = document.createElement("a");
               (e.href =
-                "https://drive.google.com/uc?export=download&id=1WfehTNBPpH9GMebl7ZVAqMRaP9kFVj8o"),
+                "/Aman_Upadhyay_Resume.pdf"),
                 (e.download = "Aman_Upadhyay_Resume.pdf"),
                 document.body.appendChild(e),
                 e.click(),
@@ -880,33 +880,34 @@
       };
       let z = [
           {
-            title: "Sr. DevOps Engineer",
-            company: "orbitronai.com",
-            role: "Full-time",
-            period: "Oct 2025 - Present",
+            title: "Staff DevOps Engineer",
+            company: "Orbitron AI",
+            role: "Full-time · Senior DevOps Engineer from Oct 2025 to Sep 2026",
+            period: "Oct 2026 - Present",
             location: "Bengaluru, Karnataka, India · On-site",
             description:
-              "Building production infrastructure and release foundations for an agentic AI platform.",
+              "Promoted to Staff DevOps Engineer after building production infrastructure for an agentic AI platform.",
             className:
               "from-cyan-900/20 to-cyan-950/20 border-cyan-900/50",
             details: [
-              "Architected infrastructure for an agentic AI platform across local development, serverless workloads, and scalable Kubernetes, supporting independently deployable products and production-ready foundations.",
-              "Scaled a black-box browser application from 2 to 500+ concurrent sessions with AdsPower-based automation for end-to-end workflows.",
-              "Established multi-region release engineering, including branching strategies, versioning, release processes, and rollout strategies.",
-              "Built internal agentic workflows to standardize AI-assisted development, prompts, testing, and output validation.",
-              "Implemented Metabase business intelligence and analytics with data integration and access controls.",
-              "Led reliability and security work across 7 environments, 63 components, and 11,935 configuration and infrastructure items; identified 195 unreferenced resources and validated consistency across 22 of 22 environment renders.",
-              "As part of a 2-person DevOps team in a 20+ developer organization, identified 35+ release reliability issues across 7 categories and analyzed 31 failed release candidate builds while driving CI/CD, Kubernetes security, least-privilege access, and GDPR/SOC 2 readiness.",
+              "Architected infrastructure for an agentic AI platform spanning local development, serverless workloads, and Kubernetes across 3 products and 2 regions.",
+              "Scaled browser automation from 2 to 500+ concurrent end-to-end sessions, enabling reliable execution across multiple products.",
+              "Reduced cloud infrastructure costs by 42% through legacy environment decommissioning and resource right-sizing.",
+              "Delivered 3 versioned releases to EU enterprise production in under 10 days, using phased cutovers, centralized Argo CD, hotfix pipelines, and rehearsed rollbacks.",
+              "Audited 7 environments and 63 components, identifying 195 unreferenced infrastructure resources and 35+ release-safety issues, and developed a prioritized remediation plan.",
+              "Standardized CI/CD practices across 26 repositories, strengthening release controls and adopting GitHub App/OIDC authentication.",
+              "Drove platform-wide reliability and standardization across 7 environments and 26 repositories, establishing consistent configuration, deployment controls, and release-safety guardrails.",
+              "Supported 20+ developers as part of a 2-person DevOps team, improving deployment reliability, infrastructure security, and engineering workflows.",
             ],
             technologies: [
               "Kubernetes",
               "Serverless",
               "Agentic AI",
-              "AdsPower",
-              "Metabase",
+              "Argo CD",
+              "GitHub Actions",
+              "OIDC",
               "CI/CD",
               "Release Engineering",
-              "Security",
             ],
             url: "#",
           },
@@ -914,7 +915,7 @@
             title: "Sr. DevOps & Solution Architect",
             company: "Stealth Startup",
             role: "Freelance",
-            period: "Jan 2025 - Sep 2025",
+            period: "Jan 2025 - Oct 2025",
             description:
               "Orchestrating and scaling cloud-native systems for Web3 infrastructure.",
             className: "from-blue-900/20 to-blue-950/20 border-blue-900/50",
@@ -1567,7 +1568,7 @@
         let e = (0, a.useCallback)(() => {
             let e = document.createElement("a");
             (e.href =
-              "https://drive.google.com/uc?export=download&id=1WfehTNBPpH9GMebl7ZVAqMRaP9kFVj8o"),
+              "/Aman_Upadhyay_Resume.pdf"),
               (e.download = "Aman_Upadhyay_Resume.pdf"),
               document.body.appendChild(e),
               e.click(),
