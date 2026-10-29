@@ -1,0 +1,18 @@
+/* The motion layer is deliberately separate so the visual system remains readable without JavaScript. */
+@media (prefers-reduced-motion:no-preference) {
+  .orbital-system { animation: drift 9s ease-in-out infinite; }
+  .orbit-one { animation: spin 24s linear infinite; }
+  .orbit-two { animation: spin-reverse 38s linear infinite; }
+  .core { animation: core-pulse 3.8s ease-in-out infinite; }
+  .core::after { content:""; position:absolute; inset:-11px; border:1px solid rgba(212,251,98,.23); border-radius:50%; animation:ripple 3.8s ease-out infinite; }
+  .node::before { animation: node-pulse 2.8s ease-in-out infinite; }
+  .node-cloud::before { animation-delay:.8s; }.node-chain::before { animation-delay:1.6s; }
+  .brain-grid { animation:grid-flow 7s linear infinite; }.chain-ring { animation:spin 13s linear infinite; }.git-lines { animation:line-flow 3.5s linear infinite; }
+}
+.node.active { color:var(--acid); text-shadow:0 0 20px rgba(212,251,98,.75); }.node.active::before { background:var(--acid); box-shadow:0 0 22px var(--acid); }
+.node { translate:-50% -50%; }.node:hover { transform:scale(1.08); }
+.case[data-tilt] { transform:perspective(1300px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)); transform-style:preserve-3d; will-change:transform; }
+.case[data-tilt] .case-art,.case[data-tilt] .case-copy { transform:translateZ(0); transition:transform .35s ease; }.case[data-tilt]:hover .case-art { transform:translateZ(24px); }.case[data-tilt]:hover .case-copy { transform:translateZ(14px); }
+[data-magnetic] { will-change:transform; transition:transform .22s cubic-bezier(.2,.9,.2,1); }
+@keyframes drift { 0%,100% { margin-top:0; } 50% { margin-top:-18px; } } @keyframes spin { to { transform:rotate(360deg); } } @keyframes spin-reverse { to { transform:rotate(-360deg); } } @keyframes core-pulse { 0%,100% { box-shadow:0 0 0 rgba(212,251,98,0); } 50% { box-shadow:0 0 45px rgba(212,251,98,.18); } } @keyframes ripple { 0% { opacity:.8; transform:scale(.8); } 100% { opacity:0; transform:scale(1.45); } } @keyframes node-pulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(.62); opacity:.55; } } @keyframes grid-flow { to { background-position:0 0,27px 27px; } } @keyframes line-flow { to { background-position:48px 0; } }
+@media (max-width:800px) { .case[data-tilt] { transform:none!important; }.case[data-tilt]:hover .case-art,.case[data-tilt]:hover .case-copy { transform:none; } }

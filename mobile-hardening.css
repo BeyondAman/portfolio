@@ -1,0 +1,16 @@
+/* Mobile browser hardening: recent iOS Safari/WebKit and Android Chromium. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--night)}body{overflow-x:clip;-webkit-tap-highlight-color:transparent}a,button{touch-action:manipulation}.site-header,.hero,.proof,.work-section,.runtime,.assurance,.capabilities,.experience,.contact,footer{max-inline-size:100%}
+@media (max-width:800px){
+  .site-header{min-height:64px;height:auto;padding-top:max(12px,env(safe-area-inset-top));padding-left:max(5vw,env(safe-area-inset-left));padding-right:max(5vw,env(safe-area-inset-right));padding-bottom:12px}
+  .nav-contact{min-height:44px;display:inline-flex;align-items:center}
+  .hero{min-height:100vh;min-height:100svh;padding-left:max(5vw,env(safe-area-inset-left));padding-right:max(5vw,env(safe-area-inset-right));padding-bottom:max(31px,env(safe-area-inset-bottom))}
+  .proof,.work-section,.runtime,.assurance,.capabilities,.experience,.contact{padding-left:max(5vw,env(safe-area-inset-left));padding-right:max(5vw,env(safe-area-inset-right))}
+  .contact{padding-bottom:max(40px,calc(24px + env(safe-area-inset-bottom)))}footer{padding-left:max(5vw,env(safe-area-inset-left));padding-right:max(5vw,env(safe-area-inset-right));padding-bottom:max(20px,env(safe-area-inset-bottom))}
+  .circle-link{width:100px;height:100px;min-width:44px;min-height:44px}
+  .node{min-height:44px;min-width:44px;font-size:0;padding:0;display:grid;place-items:center}.node::before{margin:0;width:10px;height:10px}.node span{display:none}.tool-cloud span{min-height:38px;display:inline-flex;align-items:center}
+  .case-copy h3,.assurance-ledger h3,.timeline h3,.contact-row a{overflow-wrap:anywhere}
+  #constellation{opacity:.3}
+}
+@supports (min-height:100dvh){@media (max-width:800px){.hero{min-height:100dvh}}}
+@media (max-width:800px) and (orientation:landscape){.site-header{min-height:56px}.hero{min-height:540px}.orbital-system{opacity:.48}.hero-meta{display:none}}
+@media (max-width:380px){.hero h1{font-size:4rem}.hero-bottom{align-items:flex-start}.hero-bottom>p{max-width:190px}.domain-matrix{gap:7px}.domain-matrix span{font-size:7px}}

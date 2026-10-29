@@ -1,0 +1,2 @@
+/* Scroll is system energy: wheel direction drives the live topology. */
+@media (prefers-reduced-motion:no-preference){body.scroll-reactive .orbit-one,body.scroll-reactive .orbit-two{animation:none!important}body.scroll-reactive .core{box-shadow:0 0 calc(26px + var(--scroll-energy,0) * 16px) rgba(212,251,98,.2)}body.scroll-reactive #trace-pulse{filter:drop-shadow(0 0 calc(6px + var(--scroll-energy,0) * 9px) var(--acid))}}

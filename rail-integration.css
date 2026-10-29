@@ -1,0 +1,15 @@
+/* Service-bus rail: a piece of the page grid, not a separate dashboard panel. */
+@media (min-width:801px){
+  .portfolio-shell{grid-template-columns:clamp(92px,9vw,160px) minmax(0,1fr)}
+  .pipeline-map{position:sticky;background:transparent;border-right:0;padding:0 clamp(12px,1.5vw,22px);align-items:flex-end;mix-blend-mode:normal}
+  .pipeline-map::before{content:"";position:absolute;right:0;top:0;bottom:0;width:1px;background:linear-gradient(transparent 2%,rgba(212,251,98,.08) 12%,rgba(212,251,98,.2) 50%,rgba(212,251,98,.08) 88%,transparent 98%)}
+  .pipeline-map::after{content:"";position:absolute;right:-28px;top:50%;width:28px;border-top:1px solid rgba(212,251,98,.5);opacity:.8}
+  .pipeline-map .rail-brand{left:auto;right:18px;top:27px;text-align:right;opacity:.62}.pipeline-map .rail-brand small{display:none}
+  .pipeline-map p{position:relative;z-index:2;margin:0 -9px 2px 0;padding:7px 9px;background:var(--night);border:1px solid rgba(212,251,98,.25);color:var(--acid);box-shadow:0 0 26px rgba(212,251,98,.08)}
+  .pipeline-map svg{width:68px;height:min(55vh,530px);margin:0 -2px 0 0}.pipeline-map ol{display:none}.pipeline-map>span{margin:5px 3px 0 0;opacity:.65}
+  .story-column{position:relative;background:linear-gradient(90deg,rgba(212,251,98,.025),transparent 6%)}
+  .story-column::before{content:"";position:absolute;z-index:2;left:0;top:0;bottom:0;width:1px;background:rgba(212,251,98,.16);pointer-events:none}
+  .hero,.proof,.work-section,.runtime,.capabilities,.experience,.contact{position:relative}
+  .hero::before,.proof::before,.work-section::before,.runtime::before,.capabilities::before,.experience::before,.contact::before{content:"";position:absolute;left:0;top:50%;width:18px;border-top:1px solid rgba(212,251,98,.22);pointer-events:none}
+}
+@media (min-aspect-ratio:2/1) and (min-width:1100px){.portfolio-shell{grid-template-columns:clamp(120px,8vw,180px) minmax(0,1fr)}.pipeline-map svg{width:78px}.pipeline-map::after{width:38px;right:-38px}}
