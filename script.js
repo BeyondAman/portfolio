@@ -1,8 +1,11 @@
 (() => {
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isFinePointer = matchMedia("(pointer: fine)").matches;
+  const root = document.documentElement;
+  const body = document.body;
   document.querySelector("#year").textContent = new Date().getFullYear();
 
+  if (!reduceMotion && "IntersectionObserver" in window) body.classList.add("js-reveals-ready");
   const reveal = new IntersectionObserver((entries) => entries.forEach((entry) => {
     if (entry.isIntersecting) {
       entry.target.classList.add("visible");
