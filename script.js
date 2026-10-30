@@ -5,31 +5,45 @@
   const body = document.body;
   document.querySelector("#year").textContent = new Date().getFullYear();
 
-  if (!reduceMotion && "IntersectionObserver" in window) body.classList.add("js-reveals-ready");
-  const reveal = new IntersectionObserver((entries) => entries.forEach((entry) => {
-    if (entry.isIntersecting) {
+  const hasObserver = "IntersectionObserver" in window;
+  if (!reduceMotion && hasObserver) body.classList.add("js-reveals-ready");
+  if (hasObserver && !reduceMotion) {
+    const reveal = new IntersectionObserver((entries, observer) => entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
       entry.target.classList.add("visible");
-      reveal.unobserve(entry.target);
-    }
-  }), { threshold: 0.12 });
-  document.querySelectorAll("[data-reveal]").forEach((element) => reveal.observe(element));
+      observer.unobserve(entry.target);
+    }), { threshold: 0.08, rootMargin: "0px 0px 40px 0px" });
+    document.querySelectorAll("[data-reveal]").forEach((element) => reveal.observe(element));
+  } else {
+    document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("visible"));
+  }
 
-  const counters = new IntersectionObserver((entries) => entries.forEach((entry) => {
-    if (!entry.isIntersecting) return;
-    const element = entry.target;
-    const target = Number(element.dataset.count);
-    const suffix = element.dataset.suffix || "";
-    const startedAt = performance.now();
-    const animate = (now) => {
-      const progress = Math.min((now - startedAt) / 1100, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      element.textContent = (target * eased).toFixed(target % 1 ? 2 : 0) + suffix;
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    reduceMotion ? element.textContent = target + suffix : requestAnimationFrame(animate);
-    counters.unobserve(element);
-  }), { threshold: 0.8 });
-  document.querySelectorAll("[data-count]").forEach((element) => counters.observe(element));
+  if (hasObserver) {
+    const counters = new IntersectionObserver((entries, observer) => entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const element = entry.target;
+      const target = Number(element.dataset.count);
+      const suffix = element.dataset.suffix || "";
+      if (reduceMotion) {
+        element.textContent = target + suffix;
+      } else {
+        const startedAt = performance.now();
+        const animate = (now) => {
+          const progress = Math.min((now - startedAt) / 900, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          element.textContent = (target * eased).toFixed(target % 1 ? 2 : 0) + suffix;
+          if (progress < 1) requestAnimationFrame(animate);
+        };
+        requestAnimationFrame(animate);
+      }
+      observer.unobserve(element);
+    }), { threshold: 0.65 });
+    document.querySelectorAll("[data-count]").forEach((element) => counters.observe(element));
+  } else {
+    document.querySelectorAll("[data-count]").forEach((element) => {
+      element.textContent = (element.dataset.count || "0") + (element.dataset.suffix || "");
+    });
+  }
 
   document.querySelectorAll(".node").forEach((node) => {
     node.addEventListener("click", () => {
@@ -59,10 +73,12 @@
   addEventListener("scroll", scheduleTrace, { passive: true });
   addEventListener("resize", scheduleTrace);
   scheduleTrace();
-  const stageObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
-    if (entry.isIntersecting && stageLabel) stageLabel.textContent = entry.target.dataset.stage;
-  }), { rootMargin: "-40% 0px -52% 0px", threshold: 0 });
-  stages.forEach((stage) => stageObserver.observe(stage));
+  if (hasObserver && stageLabel) {
+    const stageObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) stageLabel.textContent = entry.target.dataset.stage;
+    }), { rootMargin: "-38% 0px -52% 0px", threshold: 0 });
+    stages.forEach((stage) => stageObserver.observe(stage));
+  }
 
   if (isFinePointer && !reduceMotion) {
     document.querySelectorAll("[data-magnetic]").forEach((element) => {
