@@ -87,8 +87,7 @@
     });
   }
 
-  const canvas = document.querySelector("#constellation");
-  const context = canvas.getContext("2d");
+  // Scroll-only orbital motion: down = anticlockwise, up = clockwise.
   const orbitalSystem = document.querySelector(".orbital-system");
   const orbitOne = document.querySelector(".orbit-one");
   const orbitTwo = document.querySelector(".orbit-two");
@@ -97,87 +96,88 @@
     { element: document.querySelector(".node-cloud"), radius: 0.485, response: 0.82, phase: 0.22 },
     { element: document.querySelector(".node-chain"), radius: 0.485, response: 0.82, phase: Math.PI + 0.22 }
   ];
-  let particles = [];
-  let pointer = { x: -999, y: -999 };
-  let lastScrollPosition = scrollY;
-  let lastScrollTime = performance.now();
-  let targetKinetic = 0;
-  let kinetic = 0;
-  let orbitRotation = 0;
-  const chargeOrbit = () => {
-    if (reduceMotion) return;
-    const now = performance.now();
-    const delta = scrollY - lastScrollPosition;
-    const elapsed = Math.max(now - lastScrollTime, 12);
-    if (delta) {
-      // Scroll up = clockwise, scroll down = counter-clockwise.
-      const direction = delta < 0 ? 1 : -1;
-      const impulse = Math.min(4.8, Math.max(0.16, Math.abs(delta / elapsed) * 0.095));
-      targetKinetic = direction * impulse;
-      document.body.classList.add("scroll-reactive");
-      document.documentElement.style.setProperty("--scroll-energy", String(Math.min(Math.abs(impulse), 3)));
-    }
-    lastScrollPosition = scrollY;
-    lastScrollTime = now;
-  };
-  addEventListener("scroll", chargeOrbit, { passive: true });
-  document.addEventListener("scroll", chargeOrbit, { passive: true });
-  const resize = () => {
-    canvas.width = innerWidth * devicePixelRatio;
-    canvas.height = innerHeight * devicePixelRatio;
-    canvas.style.width = innerWidth + "px";
-    canvas.style.height = innerHeight + "px";
-    context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-    particles = Array.from({ length: Math.min(70, Math.floor(innerWidth / 19)) }, () => ({
-      x: Math.random() * innerWidth, y: Math.random() * innerHeight,
-      radius: Math.random() * 1.5 + 0.25, vx: (Math.random() - 0.5) * 0.12, vy: (Math.random() - 0.5) * 0.12
-    }));
-  };
-  const moveOrbitingNodes = () => {
-    if (reduceMotion || !orbitalSystem) return;
-    targetKinetic *= 0.965;
-    kinetic += (targetKinetic - kinetic) * 0.1;
-    if (Math.abs(targetKinetic) < 0.01) kinetic *= 0.992;
-    orbitRotation += 0.045 + kinetic;
-    const orbitRadians = orbitRotation * Math.PI / 180;
-    if (orbitOne) orbitOne.style.transform = `rotate(${orbitRotation * 1.12}deg)`;
-    if (orbitTwo) orbitTwo.style.transform = `rotate(${orbitRotation * 0.82}deg)`;
-    const width = orbitalSystem.clientWidth;
-    const height = orbitalSystem.clientHeight;
-    const centreX = width / 2;
-    const centreY = height / 2;
-    orbitalNodes.forEach(({ element, radius, response, phase }) => {
+  let angle = 0, velocity = 0, previousY = scrollY, previousAt = performance.now(), frame = 0, frameAt = 0;
+  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+  const renderOrbit = () => {
+    if (!orbitalSystem) return;
+    const w = orbitalSystem.clientWidth, h = orbitalSystem.clientHeight, cx = w / 2, cy = h / 2;
+    const radians = angle * Math.PI / 180;
+    if (orbitOne) orbitOne.style.transform = `rotate(${angle * 1.12}deg)`;
+    if (orbitTwo) orbitTwo.style.transform = `rotate(${angle * 0.82}deg)`;
+    orbitalNodes.forEach(({element, radius, response, phase}) => {
       if (!element) return;
-      const angle = phase + orbitRadians * response;
-      element.style.left = `${centreX + Math.cos(angle) * width * radius}px`;
-      element.style.top = `${centreY + Math.sin(angle) * height * radius}px`;
+      const a = phase + radians * response;
+      element.style.left = `${cx + Math.cos(a) * w * radius}px`;
+      element.style.top = `${cy + Math.sin(a) * h * radius}px`;
     });
   };
-  const draw = () => {
-    moveOrbitingNodes();
-    context.clearRect(0, 0, innerWidth, innerHeight);
-    particles.forEach((particle, index) => {
-      particle.x += particle.vx; particle.y += particle.vy;
-      if (particle.x < 0 || particle.x > innerWidth) particle.vx *= -1;
-      if (particle.y < 0 || particle.y > innerHeight) particle.vy *= -1;
-      const pointerDistance = Math.hypot(particle.x - pointer.x, particle.y - pointer.y);
-      context.beginPath();
-      context.fillStyle = pointerDistance < 140 ? "rgba(212,251,98,.7)" : "rgba(197,208,201,.3)";
-      context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2); context.fill();
-      for (let otherIndex = index + 1; otherIndex < particles.length; otherIndex += 1) {
-        const other = particles[otherIndex];
-        const distance = Math.hypot(particle.x - other.x, particle.y - other.y);
-        if (distance < 105) {
-          context.beginPath();
-          context.strokeStyle = `rgba(160,176,170,${0.12 * (1 - distance / 105)})`;
-          context.moveTo(particle.x, particle.y); context.lineTo(other.x, other.y); context.stroke();
-        }
+  const tick = (now) => {
+    frame = 0;
+    if (document.hidden || reduceMotion || Math.abs(velocity) < 1.5) {
+      velocity = 0; frameAt = 0; body.classList.remove("scroll-reactive");
+      root.style.setProperty("--scroll-energy", "0"); return;
+    }
+    const dt = frameAt ? Math.min(now - frameAt, 40) : 16.7;
+    frameAt = now;
+    angle += velocity * dt / 1000;
+    velocity *= Math.exp(-dt / 420);
+    renderOrbit();
+    root.style.setProperty("--scroll-energy", String(clamp(Math.abs(velocity) / 180, 0, 3)));
+    if (Math.abs(velocity) >= 1.5) frame = requestAnimationFrame(tick);
+    else { velocity = 0; frameAt = 0; body.classList.remove("scroll-reactive"); root.style.setProperty("--scroll-energy", "0"); }
+  };
+  const onScroll = () => {
+    const now = performance.now(), delta = scrollY - previousY, dt = Math.max(now - previousAt, 8);
+    previousY = scrollY; previousAt = now;
+    if (!orbitalSystem || reduceMotion || Math.abs(delta) < 0.1) return;
+    // Negative angular velocity means anticlockwise for scroll-down.
+    const impulse = clamp((-delta / dt) * 95, -720, 720);
+    velocity = clamp(velocity * 0.32 + impulse * 0.68, -720, 720);
+    body.classList.add("scroll-reactive");
+    root.style.setProperty("--scroll-energy", String(clamp(Math.abs(velocity) / 180, 0, 3)));
+    if (!frame) { frameAt = 0; frame = requestAnimationFrame(tick); }
+  };
+  if (orbitalSystem) {
+    renderOrbit();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", renderOrbit, { passive: true });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (frame) cancelAnimationFrame(frame);
+        frame = 0; velocity = 0; frameAt = 0; body.classList.remove("scroll-reactive");
+      } else { previousY = scrollY; previousAt = performance.now(); renderOrbit(); }
+    });
+  }
+
+  // Static constellation background: draw on resize and pointer movement, not every frame.
+  const canvas = document.querySelector("#constellation");
+  const context = canvas && canvas.getContext ? canvas.getContext("2d") : null;
+  let particles = [], pointer = {x:-9999,y:-9999}, cw = 0, ch = 0, dpr = 1;
+  const drawConstellation = () => {
+    if (!context) return;
+    context.clearRect(0, 0, cw, ch);
+    particles.forEach((p, i) => {
+      const pd = Math.hypot(p.x-pointer.x, p.y-pointer.y);
+      context.beginPath(); context.fillStyle = pd < 140 ? "rgba(212,251,98,.7)" : "rgba(197,208,201,.3)";
+      context.arc(p.x,p.y,p.r,0,Math.PI*2); context.fill();
+      for (let j=i+1;j<particles.length;j++) {
+        const q=particles[j], d=Math.hypot(p.x-q.x,p.y-q.y);
+        if (d<105) { context.beginPath(); context.strokeStyle=`rgba(160,176,170,${.12*(1-d/105)})`; context.moveTo(p.x,p.y); context.lineTo(q.x,q.y); context.stroke(); }
       }
     });
-    if (!reduceMotion) requestAnimationFrame(draw);
   };
-  resize();
-  addEventListener("resize", resize);
-  addEventListener("pointermove", (event) => { pointer = { x: event.clientX, y: event.clientY }; });
-  draw();
+  const resizeCanvas = () => {
+    if (!canvas || !context) return;
+    cw=innerWidth; ch=innerHeight; dpr=Math.min(devicePixelRatio||1,2);
+    canvas.width=Math.round(cw*dpr); canvas.height=Math.round(ch*dpr);
+    canvas.style.width=`${cw}px`; canvas.style.height=`${ch}px`;
+    context.setTransform(dpr,0,0,dpr,0,0);
+    const count=Math.min(reduceMotion?32:56,Math.floor(cw/(reduceMotion?28:24)));
+    particles=Array.from({length:count},()=>({x:Math.random()*cw,y:Math.random()*ch,r:Math.random()*1.35+.25}));
+    drawConstellation();
+  };
+  if (canvas && context) {
+    resizeCanvas(); window.addEventListener("resize",resizeCanvas,{passive:true});
+    if (!reduceMotion) window.addEventListener("pointermove",e=>{pointer={x:e.clientX,y:e.clientY};drawConstellation();},{passive:true});
+  }
 })();
