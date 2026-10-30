@@ -1,0 +1,53 @@
+/* Portfolio audit hardening layer; loaded last to resolve legacy cascade conflicts. */
+.hero h1{font-size:clamp(3.35rem,min(10.8vw,13.5vh),11.5rem);line-height:.88;text-wrap:balance}
+.hero-copy,.story-column,.case-copy{min-width:0}
+.hero-bottom>p{font-size:clamp(.95rem,.95rem + .12vw,1.05rem);line-height:1.55}
+.case-copy>p:not(.case-type){font-size:clamp(.9rem,.9rem + .12vw,1rem);line-height:1.6}
+.metrics span,.case li{font-size:clamp(.68rem,.68rem + .06vw,.78rem);line-height:1.5}
+.case-type,.case-art small{font-size:.68rem;line-height:1.5}
+.node{font-size:clamp(.65rem,.65rem + .04vw,.72rem)}
+/* JS owns orbital transforms; remove the independent CSS animation clocks. */
+@media(prefers-reduced-motion:no-preference){
+ .orbital-system,.orbit-one,.orbit-two,.core,.core::after,.node::before{animation:none!important}
+}
+body.scroll-reactive .orbit-one,body.scroll-reactive .orbit-two{animation:none!important}
+/* Content remains visible if JS fails; reveal effects are opt-in after initialization. */
+[data-reveal]{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+body.js-reveals-ready [data-reveal]:not(.visible){opacity:0;transform:translate3d(0,14px,0)}
+body.js-reveals-ready [data-reveal].visible{opacity:1;transform:none}
+@media(max-width:800px){
+ .pipeline-map{left:4px;width:12px;opacity:.22}
+ .hero{min-height:max(690px,calc(100svh - 67px));padding-left:max(5vw,18px);padding-right:max(5vw,18px)}
+ .hero h1{font-size:clamp(3.2rem,12vw,5.8rem);line-height:.9}
+ .hero-bottom{gap:18px}.hero-bottom>p{max-width:30rem}
+ .circle-link{width:82px;height:82px;font-size:.62rem}.circle-link b{margin-top:49px;font-size:1.2rem}
+ .hero-meta{left:5vw;right:5vw;gap:8px;font-size:.62rem}.scroll-line{width:clamp(28px,10vw,70px)}
+ .section-grid,.work-section,.experience,.contact{padding-left:max(5vw,18px);padding-right:max(5vw,18px)}
+ .metrics strong{font-size:clamp(2.1rem,9vw,3.6rem)}.metrics span{font-size:.72rem}
+ .case-art{min-height:210px}.case-copy h3{font-size:clamp(1.55rem,6vw,2.35rem);line-height:1.02}
+ .case ul{gap:10px 16px}.contact h2{font-size:clamp(3.25rem,11vw,6rem);overflow-wrap:anywhere}
+}
+@media(max-width:390px){
+ .wordmark{font-size:1.35rem}.nav-contact{padding:8px 10px;font-size:.75rem}
+ .hero{min-height:700px}.hero h1{font-size:clamp(2.85rem,11.6vw,3.5rem);letter-spacing:-.075em}
+ .hero-bottom{align-items:flex-start;gap:12px}.hero-bottom>p{font-size:.9rem;line-height:1.55}
+ .circle-link{width:70px;height:70px}.circle-link b{margin-top:42px}
+ .hero-meta{font-size:.56rem}.metrics article{min-height:125px}.metrics article+article,.metrics article:nth-child(4){padding-left:12px}
+ footer{gap:12px;flex-wrap:wrap;padding-top:16px;padding-bottom:16px;font-size:.62rem}footer div{gap:14px}
+}
+@media(max-width:340px){
+ .hero h1{font-size:2.7rem}.hero-bottom{flex-direction:column;align-items:flex-start}
+ .hero-meta span:last-child{display:none}.domain-matrix{gap:7px}.domain-matrix span{font-size:.56rem}
+}
+@media(orientation:landscape) and (max-height:520px){
+ .hero{min-height:620px}.orbital-system{opacity:.42}.hero-copy{padding-top:30px}
+ .hero h1{font-size:clamp(3rem,8vw,6.5rem)}
+}
+@media(hover:none),(prefers-reduced-motion:reduce){
+ [data-magnetic],.case[data-tilt],.case[data-tilt] .case-art,.case[data-tilt] .case-copy{transform:none!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto!important}
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+ [data-reveal],body.js-reveals-ready [data-reveal]:not(.visible){opacity:1!important;transform:none!important}
+}
