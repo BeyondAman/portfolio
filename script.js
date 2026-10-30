@@ -116,7 +116,7 @@
     { element: document.querySelector(".node-chain"), radius: 0.485, response: 0.82, phase: Math.PI + 0.22 }
   ];
   const idleAngularSpeed = 12; // degrees per second, clockwise
-  let angle = 0, scrollVelocity = 0, previousY = scrollY, previousAt = performance.now(), frame = 0, frameAt = 0;
+  let angle = 0, scrollVelocity = 0, lastScrollDirection = 0, previousY = scrollY, previousAt = performance.now(), frame = 0, frameAt = 0;
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
   const renderOrbit = () => {
     if (!orbitalSystem) return;
@@ -162,8 +162,13 @@
     previousAt = now;
     if (!orbitalSystem || reduceMotion || Math.abs(delta) < 0.1) return;
     // Scrolling down adds anticlockwise impulse; scrolling up adds clockwise impulse.
-    const impulse = clamp((-delta / dt) * 95, -720, 720);
-    scrollVelocity = clamp(scrollVelocity * 0.32 + impulse * 0.68, -720, 720);
+    const direction = Math.sign(delta);
+    const impulse = clamp((direction > 0 ? -1 : 1) * (Math.abs(delta) / dt) * 120, -900, 900);
+    // Reset opposing momentum on a direction change so the response feels immediate.
+    scrollVelocity = direction !== lastScrollDirection
+      ? impulse
+      : clamp(scrollVelocity * 0.24 + impulse * 0.76, -900, 900);
+    lastScrollDirection = direction;
     body.classList.add("scroll-reactive");
     root.style.setProperty("--scroll-energy", String(clamp(Math.abs(scrollVelocity) / 180, 0, 3)));
     scheduleOrbit();
@@ -185,6 +190,51 @@
         scheduleOrbit();
       }
     });
+  }
+
+  // Recalculate Kubernetes connection paths from the live node positions.
+  // This keeps the animated packet routes connected in portrait and landscape layouts.
+  const clusterCanvas = document.querySelector(".cluster-canvas");
+  const clusterSvg = clusterCanvas && clusterCanvas.querySelector(".mesh-lines");
+  const clusterPaths = clusterSvg ? clusterSvg.querySelectorAll("path") : [];
+  const clusterMark = clusterCanvas && clusterCanvas.querySelector(".cluster-mark");
+  const clusterServices = clusterCanvas ? [...clusterCanvas.querySelectorAll(".service")] : [];
+  const renderClusterRoutes = () => {
+    if (!clusterCanvas || !clusterSvg || clusterPaths.length < 2 || !clusterMark || !clusterServices.length) return;
+    const bounds = clusterCanvas.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return;
+    const sx = 1000 / bounds.width, sy = 500 / bounds.height;
+    const point = (element) => {
+      const r = element.getBoundingClientRect();
+      return { x: (r.left + r.width / 2 - bounds.left) * sx, y: (r.top + r.height / 2 - bounds.top) * sy, rx: r.width * sx / 2, ry: r.height * sy / 2 };
+    };
+    const core = point(clusterMark);
+    const routes = clusterServices.map((service) => {
+      const node = point(service);
+      const dx = core.x - node.x, dy = core.y - node.y;
+      const length = Math.max(Math.hypot(dx, dy), 1);
+      const ux = dx / length, uy = dy / length;
+      const nodeEdge = Math.min(node.rx / Math.max(Math.abs(ux), .001), node.ry / Math.max(Math.abs(uy), .001));
+      const coreEdge = Math.min(core.rx / Math.max(Math.abs(ux), .001), core.ry / Math.max(Math.abs(uy), .001));
+      const x1 = node.x + ux * nodeEdge, y1 = node.y + uy * nodeEdge;
+      const x2 = core.x - ux * coreEdge, y2 = core.y - uy * coreEdge;
+      return `M ${x1.toFixed(1)} ${y1.toFixed(1)} L ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+    });
+    const observe = clusterServices.find((service) => service.classList.contains("observe"));
+    if (observe) {
+      const node = point(observe), dx = node.x - core.x, dy = node.y - core.y;
+      const length = Math.max(Math.hypot(dx, dy), 1), ux = dx / length, uy = dy / length;
+      const coreEdge = Math.min(core.rx / Math.max(Math.abs(ux), .001), core.ry / Math.max(Math.abs(uy), .001));
+      const nodeEdge = Math.min(node.rx / Math.max(Math.abs(ux), .001), node.ry / Math.max(Math.abs(uy), .001));
+      routes.push(`M ${(core.x + ux * coreEdge).toFixed(1)} ${(core.y + uy * coreEdge).toFixed(1)} L ${(node.x - ux * nodeEdge).toFixed(1)} ${(node.y - uy * nodeEdge).toFixed(1)}`);
+    }
+    const routeData = routes.join(" ");
+    clusterPaths.forEach((path) => path.setAttribute("d", routeData));
+  };
+  if (clusterCanvas && clusterSvg) {
+    renderClusterRoutes();
+    if ("ResizeObserver" in window) new ResizeObserver(renderClusterRoutes).observe(clusterCanvas);
+    window.addEventListener("resize", renderClusterRoutes, { passive: true });
   }
 
   // Static constellation background: draw on resize and pointer movement, not every frame.
