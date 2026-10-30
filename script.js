@@ -161,9 +161,9 @@
     previousY = scrollY;
     previousAt = now;
     if (!orbitalSystem || reduceMotion || Math.abs(delta) < 0.1) return;
-    // Scrolling down adds anticlockwise impulse; scrolling up adds clockwise impulse.
+    // Scrolling down adds clockwise impulse; scrolling up adds anticlockwise impulse.
     const direction = Math.sign(delta);
-    const impulse = clamp((direction > 0 ? -1 : 1) * (Math.abs(delta) / dt) * 120, -900, 900);
+    const impulse = clamp((direction > 0 ? 1 : -1) * (Math.abs(delta) / dt) * 120, -900, 900);
     // Reset opposing momentum on a direction change so the response feels immediate.
     scrollVelocity = direction !== lastScrollDirection
       ? impulse
@@ -229,7 +229,16 @@
       routes.push(`M ${(core.x + ux * coreEdge).toFixed(1)} ${(core.y + uy * coreEdge).toFixed(1)} L ${(node.x - ux * nodeEdge).toFixed(1)} ${(node.y - uy * nodeEdge).toFixed(1)}`);
     }
     const routeData = routes.join(" ");
-    clusterPaths.forEach((path) => path.setAttribute("d", routeData));
+    clusterPaths.forEach((path) => {
+      path.setAttribute("d", routeData);
+      // Keep packet travel speed proportional to the rendered route length.
+      // SVG units are scaled to the current CSS-pixel width of the diagram.
+      const routeLength = path.getTotalLength();
+      const renderedLength = routeLength * (bounds.width / 1000);
+      const speedPxPerSecond = 78;
+      const duration = clamp(renderedLength / speedPxPerSecond, 2.8, 12);
+      path.style.animationDuration = `${duration.toFixed(2)}s`;
+    });
   };
   if (clusterCanvas && clusterSvg) {
     renderClusterRoutes();
