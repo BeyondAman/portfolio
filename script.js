@@ -106,7 +106,7 @@
     });
   }
 
-  // Scroll-only orbital motion: down = anticlockwise, up = clockwise.
+  // Continuous clockwise orbital motion with scroll-driven directional impulses.
   const orbitalSystem = document.querySelector(".orbital-system");
   const orbitOne = document.querySelector(".orbit-one");
   const orbitTwo = document.querySelector(".orbit-two");
@@ -115,7 +115,8 @@
     { element: document.querySelector(".node-cloud"), radius: 0.485, response: 0.82, phase: 0.22 },
     { element: document.querySelector(".node-chain"), radius: 0.485, response: 0.82, phase: Math.PI + 0.22 }
   ];
-  let angle = 0, velocity = 0, previousY = scrollY, previousAt = performance.now(), frame = 0, frameAt = 0;
+  const idleAngularSpeed = 12; // degrees per second, clockwise
+  let angle = 0, scrollVelocity = 0, previousY = scrollY, previousAt = performance.now(), frame = 0, frameAt = 0;
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
   const renderOrbit = () => {
     if (!orbitalSystem) return;
@@ -132,39 +133,57 @@
   };
   const tick = (now) => {
     frame = 0;
-    if (document.hidden || reduceMotion || Math.abs(velocity) < 1.5) {
-      velocity = 0; frameAt = 0; body.classList.remove("scroll-reactive");
-      root.style.setProperty("--scroll-energy", "0"); return;
+    if (document.hidden || reduceMotion || !orbitalSystem) {
+      frameAt = 0;
+      return;
     }
     const dt = frameAt ? Math.min(now - frameAt, 40) : 16.7;
     frameAt = now;
-    angle += velocity * dt / 1000;
-    velocity *= Math.exp(-dt / 420);
+    angle += (idleAngularSpeed + scrollVelocity) * dt / 1000;
+    scrollVelocity *= Math.exp(-dt / 420);
     renderOrbit();
-    root.style.setProperty("--scroll-energy", String(clamp(Math.abs(velocity) / 180, 0, 3)));
-    if (Math.abs(velocity) >= 1.5) frame = requestAnimationFrame(tick);
-    else { velocity = 0; frameAt = 0; body.classList.remove("scroll-reactive"); root.style.setProperty("--scroll-energy", "0"); }
+    root.style.setProperty("--scroll-energy", String(clamp(Math.abs(scrollVelocity) / 180, 0, 3)));
+    if (Math.abs(scrollVelocity) < 1.5) {
+      scrollVelocity = 0;
+      body.classList.remove("scroll-reactive");
+      root.style.setProperty("--scroll-energy", "0");
+    }
+    frame = requestAnimationFrame(tick);
+  };
+  const scheduleOrbit = () => {
+    if (!frame && !document.hidden && !reduceMotion && orbitalSystem) {
+      frameAt = 0;
+      frame = requestAnimationFrame(tick);
+    }
   };
   const onScroll = () => {
     const now = performance.now(), delta = scrollY - previousY, dt = Math.max(now - previousAt, 8);
-    previousY = scrollY; previousAt = now;
+    previousY = scrollY;
+    previousAt = now;
     if (!orbitalSystem || reduceMotion || Math.abs(delta) < 0.1) return;
-    // Negative angular velocity means anticlockwise for scroll-down.
+    // Scrolling down adds anticlockwise impulse; scrolling up adds clockwise impulse.
     const impulse = clamp((-delta / dt) * 95, -720, 720);
-    velocity = clamp(velocity * 0.32 + impulse * 0.68, -720, 720);
+    scrollVelocity = clamp(scrollVelocity * 0.32 + impulse * 0.68, -720, 720);
     body.classList.add("scroll-reactive");
-    root.style.setProperty("--scroll-energy", String(clamp(Math.abs(velocity) / 180, 0, 3)));
-    if (!frame) { frameAt = 0; frame = requestAnimationFrame(tick); }
+    root.style.setProperty("--scroll-energy", String(clamp(Math.abs(scrollVelocity) / 180, 0, 3)));
+    scheduleOrbit();
   };
   if (orbitalSystem) {
     renderOrbit();
+    if (!reduceMotion) scheduleOrbit();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", renderOrbit, { passive: true });
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         if (frame) cancelAnimationFrame(frame);
-        frame = 0; velocity = 0; frameAt = 0; body.classList.remove("scroll-reactive");
-      } else { previousY = scrollY; previousAt = performance.now(); renderOrbit(); }
+        frame = 0;
+        frameAt = 0;
+      } else {
+        previousY = scrollY;
+        previousAt = performance.now();
+        renderOrbit();
+        scheduleOrbit();
+      }
     });
   }
 
